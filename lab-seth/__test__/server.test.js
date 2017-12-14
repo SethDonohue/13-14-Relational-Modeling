@@ -21,6 +21,17 @@ const hoststarMockupCreator = () => {
   }).save();
 };
 
+const hoststarMockupCreatorTwo = () => {
+  return new Hoststar({
+    name: `K-123455`,
+    numberOfPlanets: faker.random.number({ min: 0, max: 10 }),
+    hdName: `HD-${faker.random.number({ min: 0, max: 10000 })}`,
+    mass: faker.random.number({ min: 0, max: 1000000000 }),
+    radius: faker.random.number({ min: 0, max: 1000 }),
+    luminosity: faker.random.number({ min: -10, max: 10 }),
+  }).save();
+};
+
 describe('api/hoststars', () => {
   beforeAll(server.start);
   afterAll(server.stop);
@@ -94,6 +105,37 @@ describe('api/hoststars', () => {
   //TODO: ADD A PUT TEST FOR 404
   //TODO: ADD A PUT TEST FOR 409(IF ANY KEYS ARE UNIQUE)
 
+
+  describe('PUT /api/hoststars', () => {
+    test('should respond with a 200 status code if there is no error', () => {
+      let hoststarToTest = null;
+      let hoststarToPut = {
+        name: `K-123000`,
+        numberOfPlanets: 3, //took out faker here as it was causing some tests to pass and some to fail depending on how long it took to generate a random number
+        hdName: `HD-${faker.random.number({ min: 0, max: 10000 })}`,
+        mass: faker.random.number({ min: 0, max: 1000000000 }),
+        radius: faker.random.number({ min: 0, max: 1000 }),
+        luminosity: faker.random.number({ min: -10, max: 10 }),
+      };
+
+      return hoststarMockupCreatorTwo()
+        .then(hoststar => {
+          hoststarToTest = hoststar;
+          return superagent.put(`${apiURL}/${hoststar._id}`).send(hoststarToPut);
+        })
+        .then(response => {
+          expect(response.status).toEqual(200);
+          console.log('hoststarToPutId: ', hoststarToTest._id);
+          console.log('Response ID: ', response.body._id);
+
+          expect(response.body._id).toEqual(hoststarToTest._id.toString()); //MonogoDB needs items to be in strings
+          
+
+          expect(response.body.name).toEqual(hoststarToPut.name);
+          expect(response.body.numberOfPlanets).toEqual(hoststarToPut.numberOfPlanets);
+        });
+    });
+  });
 
   describe('DELETE /api/hoststars/:id', () => {
     test('should respond with a 204 status code if there is no error', () => {

@@ -20,6 +20,7 @@ hoststarRouter.post('/api/hoststars', jsonParser, (request,response, next) => {
 });
 
 hoststarRouter.get('/api/hoststars/:id', (request,response,next) => {
+  console.log(request.params.id);
   return Hoststar.findById(request.params.id)
     .then(hoststar => {
       if(!hoststar){
@@ -43,6 +44,9 @@ hoststarRouter.delete('/api/hoststars/:id', (request, response, next) => {
 
 hoststarRouter.put('/api/hoststars/:id', jsonParser, (request, response, next) => {
   let options = { runValidators: true, new: true };
+  if (!request.body.name || !request.body.numberOfPlanets) {
+    return next(httpErrors(400, 'Body and Name are required'));
+  }
 
   return Hoststar.findByIdAndUpdate(request.params.id, request.body, options)
     .then(hoststar => {
