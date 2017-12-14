@@ -21,17 +21,6 @@ const hoststarMockupCreator = () => {
   }).save();
 };
 
-const hoststarMockupCreatorTwo = () => {
-  return new Hoststar({
-    name: `K-123455`,
-    numberOfPlanets: faker.random.number({ min: 0, max: 10 }),
-    hdName: `HD-${faker.random.number({ min: 0, max: 10000 })}`,
-    mass: faker.random.number({ min: 0, max: 1000000000 }),
-    radius: faker.random.number({ min: 0, max: 1000 }),
-    luminosity: faker.random.number({ min: -10, max: 10 }),
-  }).save();
-};
-
 describe('api/hoststars', () => {
   beforeAll(server.start);
   afterAll(server.stop);
@@ -47,7 +36,7 @@ describe('api/hoststars', () => {
         radius: faker.random.number({ min: 0, max: 1000 }),
         luminosity: faker.random.number({ min: -10, max: 10 }),
       };
-      return superagent.post(`${apiURL}`)
+      return superagent.post(apiURL)
         .send(hoststarToPost)
         .then(response => {
           expect(response.status).toEqual(200);
@@ -56,11 +45,12 @@ describe('api/hoststars', () => {
           expect(response.body.numberOfPlanets).toEqual(hoststarToPost.numberOfPlanets);
         });
     });
-    test('POST should respond with a 400 code if we send an incomplete hoststar', () => {
+
+    test('should respond with a 400 code if we send an incomplete hoststar', () => {
       let hoststarToPost = {
         name: '1234',
       };
-      return superagent.post(`${apiURL}`)
+      return superagent.post(apiURL)
         .send(hoststarToPost)
         .then(Promise.reject)
         .catch(response => {
@@ -78,10 +68,11 @@ describe('api/hoststars', () => {
         luminosity: faker.random.number({ min: -10, max: 10 }),
       };
 
-      return superagent.post(`${apiURL}`)
+      return superagent.post(apiURL)
         .send(hoststarToPost)
         .then(() => {
-          return superagent.post(apiURL).send(hoststarToPost);
+          return superagent.post(apiURL)
+            .send(hoststarToPost);
         })
         .catch(response => {
           expect(response.status).toEqual(409);
@@ -104,7 +95,7 @@ describe('api/hoststars', () => {
           expect(response.body.name).toEqual(hoststarToTest.name);
         });
     });
-    test('GET should respond with a 404 status code if the id is incorrect', () => {
+    test('should respond with a 404 status code if the id is incorrect', () => {
       return superagent.get(`${apiURL}/fake`)
         .then(Promise.reject)
         .catch(response => {
@@ -125,10 +116,11 @@ describe('api/hoststars', () => {
         luminosity: faker.random.number({ min: -10, max: 10 }),
       };
 
-      return hoststarMockupCreatorTwo()
+      return hoststarMockupCreator()
         .then(hoststar => {
           hoststarToTest = hoststar;
-          return superagent.put(`${apiURL}/${hoststar._id}`).send(hoststarToPut);
+          return superagent.put(`${apiURL}/${hoststar._id}`)
+            .send(hoststarToPut);
         })
         .then(response => {
           expect(response.status).toEqual(200);
@@ -138,8 +130,28 @@ describe('api/hoststars', () => {
         });
     });
 
-    //TODO: ADD A PUT TEST FOR 400
+    test('should respond with a 400 code if we send an incomplete hoststar', () => {
+      let hoststarToTest = null;
+      let hoststarToPut = {
+        name: `K-123000`,
+        // numberOfPlanets: 3, //took out faker here as it was causing some tests to pass and some to fail depending on how long it took to generate a random number
+        hdName: `HD-${faker.random.number({ min: 0, max: 10000 })}`,
+        mass: faker.random.number({ min: 0, max: 1000000000 }),
+        radius: faker.random.number({ min: 0, max: 1000 }),
+        luminosity: faker.random.number({ min: -10, max: 10 }),
+      };
 
+      return hoststarMockupCreator()
+        .then(hoststar => {
+          hoststarToTest = hoststar;
+          return superagent.put(`${apiURL}/${hoststar._id}`)
+            .send(hoststarToPut);
+        })
+        .then(Promise.reject)
+        .catch(response => {
+          expect(response.status).toEqual(400);
+        });
+    });
 
     //TODO: ADD A PUT TEST FOR 404
 
