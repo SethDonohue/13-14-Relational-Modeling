@@ -10,8 +10,8 @@ const httpErrors = require('http-errors');
 const hoststarRouter = module.exports = new Router();
 
 hoststarRouter.post('/api/hoststars', jsonParser, (request,response, next) => {  
-  if(!request.body.name || !request.body.content) {
-    return next(httpErrors(400, 'body and content are required'));
+  if (!request.body.name) {
+    return next(httpErrors(400, 'Body and Name are required'));
   }
 
   return new Hoststar(request.body).save()
