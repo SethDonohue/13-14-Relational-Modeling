@@ -12,32 +12,12 @@ const apiURL = `http://localhost:${process.env.PORT}/api/hoststars`;
 
 const hoststarMockupCreator = () => {
   return new Hoststar({
-    name: {
-      type: String,
-      default: `K-${faker.random.number({ min: 0, max: 10000 })}`,
-      required: true,
-      unique: true,
-    },
-    numberOfPlanets: {
-      type: Number,
-      required: true,
-      default: faker.random.number({ min: 0, max: 10 }),
-    },
-    hdName: {
-      type: String,
-      minlength: 3,
-    },
-    mass: {
-      type: Number,
-      default: faker.random.number({ min: 0, max: 1000000000 }),
-    },
-    radius: {
-      type: Number,
-      default: faker.random.number({ min: 0, max: 1000 }),
-    },
-    luminosity: {
-      type: Number,
-      default: faker.random.number({ min: -10, max: 10 }),
+    name: `K-123456`,
+    numberOfPlanets: faker.random.number({ min: 0, max: 10 }),
+    hdName: `HD-${faker.random.number({ min: 0, max: 10000 })}`,
+    mass: faker.random.number({ min: 0, max: 1000000000 }),
+    radius: faker.random.number({ min: 0, max: 1000 }),
+    luminosity: faker.random.number({ min: -10, max: 10 }),
     },
   }).save();
 };
@@ -49,10 +29,7 @@ describe('api/hoststars', () => {
 
   describe('POST /api/hoststars', () => {
     test('should respond with a hoststar and a 200 status code if there is no error', () => {
-      let hoststarToPost = {
-        name: `K-123456`,
-        content: 'words',
-      };
+      let hoststarToPost = hoststarMockupCreator();
       return superagent.post(`${apiURL}`)
         .send(hoststarToPost)
         .then(response => {
@@ -90,10 +67,9 @@ describe('api/hoststars', () => {
         .then(response => {
           expect(response.status).toEqual(200);
 
-          expect(response.body._id).toEqual(hoststarToTest._id.toString());
+          expect(response.body._id).toEqual(hoststarToTest._id.toString()); //MonogoDB needs items to be in strings
 
           expect(response.body.name).toEqual(hoststarToTest.name);
-          expect(response.body.content).toEqual(hoststarToTest.content);          
         });
     });
     test('GET should respond with a 404 status code if the id is incorrect', () => {
