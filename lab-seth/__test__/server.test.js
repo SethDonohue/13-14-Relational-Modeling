@@ -58,19 +58,12 @@ describe('api/hoststars', () => {
         });
     });
 
-    test('should respond with a hoststar and a 409 status code if any keys are duplicated', () => {
-      let hoststarToPost = {
-        name: `K-123486`,
-        numberOfPlanets: 2, //took out faker here as it was causing some tests to pass and some to fail depending on how long it took to generate a random number
-        hdName: `HD-${faker.random.number({ min: 0, max: 10000 })}`,
-        mass: faker.random.number({ min: 0, max: 1000000000 }),
-        radius: faker.random.number({ min: 0, max: 1000 }),
-        luminosity: faker.random.number({ min: -10, max: 10 }),
-      };
+    test('should respond with a 409 status code if any keys are duplicated', () => {
+      let hoststarToPost = null;
 
-      return superagent.post(apiURL)
-        .send(hoststarToPost)
-        .then(() => {
+      return hoststarMockupCreator()
+        .then(hoststar => {
+          hoststarToPost = hoststar;
           return superagent.post(apiURL)
             .send(hoststarToPost);
         })
@@ -173,6 +166,35 @@ describe('api/hoststars', () => {
         .then(Promise.reject)
         .catch(response => {
           expect(response.status).toEqual(404);
+        });
+    });
+
+    test.only('should respond with a 409 code if any keys are duplicated', () => {
+      // let hoststarToTest = null;
+      // let hoststarToPut = {
+      //   name: `K-123000`,
+      //   numberOfPlanets: 3, //took out faker here as it was causing some tests to pass and some to fail depending on how long it took to generate a random number
+      //   hdName: `HD-${faker.random.number({ min: 0, max: 10000 })}`,
+      //   mass: faker.random.number({ min: 0, max: 1000000000 }),
+      //   radius: faker.random.number({ min: 0, max: 1000 }),
+      //   luminosity: faker.random.number({ min: -10, max: 10 }),
+      // };
+
+      let hoststarToTest = null;
+      return hoststarMockupCreator()
+      // .then()
+        .then(() => {
+          console.log('hitting this thing');
+          return hoststarMockupCreator()
+            .then(hoststar => {
+              console.log('hostarToTest: ', hoststarToTest);
+              return superagent.put(`${apiURL}/${hoststar._id}`)
+                .send({name: hoststarToTest.name});
+            });
+        })
+        .then(Promise.reject)
+        .catch(response => {
+          expect(response.status).toEqual(409);
         });
     });
 
