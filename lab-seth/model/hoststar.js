@@ -2,7 +2,7 @@
 
 const faker = require('faker');
 const mongoose = require('mongoose');
-const planetSchema = require('./planet');
+// const planetSchema = require('./planet');
 
 const hoststarSchema = mongoose.Schema({
   name: {
@@ -31,11 +31,7 @@ const hoststarSchema = mongoose.Schema({
     type: Number,
     default: faker.random.number({ min: -10, max: 10 }),
   },
-  // planetNames: {
-  //   type: planetSchema.types.objectid,
-  //   required: true,
-  //   unique: true,
-  // },
+
 });
 
 module.exports = mongoose.model('hoststar', hoststarSchema);

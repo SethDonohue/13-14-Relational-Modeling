@@ -9,11 +9,11 @@ const httpErrors = require('http-errors');
 
 const hoststarRouter = module.exports = new Router();
 
-hoststarRouter.post('/api/hoststars', jsonParser, (request,response, next) => {  
+hoststarRouter.post('/api/hoststars', jsonParser, (request,response, next) => { 
   if (!request.body.name || !request.body.numberOfPlanets) {
     return next(httpErrors(400, 'Body and Name are required'));
   }
-
+  
   return new Hoststar(request.body).save()
     .then(hoststar => response.json(hoststar)) //this sends a 200
     .catch(next);

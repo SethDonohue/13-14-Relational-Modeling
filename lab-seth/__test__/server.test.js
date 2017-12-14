@@ -52,9 +52,7 @@ describe('api/hoststars', () => {
         .then(response => {
           expect(response.status).toEqual(200);
           expect(response.body._id).toBeTruthy();
-
           expect(response.body.name).toEqual(hoststarToPost.name);
-          console.log(response.body.numberOfPlanets);
           expect(response.body.numberOfPlanets).toEqual(hoststarToPost.numberOfPlanets);
         });
     });
@@ -66,12 +64,29 @@ describe('api/hoststars', () => {
         .send(hoststarToPost)
         .then(Promise.reject)
         .catch(response => {
-          console.log(response.status);
           expect(response.status).toEqual(400);
         });
     });
 
-    //TODO: ADD A POST TEST FOR 409(IF ANY KEYS ARE UNIQUE)
+    test('should respond with a hoststar and a 409 status code if any keys are duplicated', () => {
+      let hoststarToPost = {
+        name: `K-123486`,
+        numberOfPlanets: 2, //took out faker here as it was causing some tests to pass and some to fail depending on how long it took to generate a random number
+        hdName: `HD-${faker.random.number({ min: 0, max: 10000 })}`,
+        mass: faker.random.number({ min: 0, max: 1000000000 }),
+        radius: faker.random.number({ min: 0, max: 1000 }),
+        luminosity: faker.random.number({ min: -10, max: 10 }),
+      };
+
+      return superagent.post(`${apiURL}`)
+        .send(hoststarToPost)
+        .then(() => {
+          return superagent.post(apiURL).send(hoststarToPost);
+        })
+        .catch(response => {
+          expect(response.status).toEqual(409);
+        });
+    });   
   });
 
   describe('GET /api/hoststars', () => {
@@ -85,9 +100,7 @@ describe('api/hoststars', () => {
         })
         .then(response => {
           expect(response.status).toEqual(200);
-
           expect(response.body._id).toEqual(hoststarToTest._id.toString()); //MonogoDB needs items to be in strings
-
           expect(response.body.name).toEqual(hoststarToTest.name);
         });
     });
@@ -99,12 +112,6 @@ describe('api/hoststars', () => {
         });
     });
   });
-
-  //TODO: ADD A PUT TEST FOR 200
-  //TODO: ADD A PUT TEST FOR 400
-  //TODO: ADD A PUT TEST FOR 404
-  //TODO: ADD A PUT TEST FOR 409(IF ANY KEYS ARE UNIQUE)
-
 
   describe('PUT /api/hoststars', () => {
     test('should respond with a 200 status code if there is no error', () => {
@@ -125,16 +132,21 @@ describe('api/hoststars', () => {
         })
         .then(response => {
           expect(response.status).toEqual(200);
-          console.log('hoststarToPutId: ', hoststarToTest._id);
-          console.log('Response ID: ', response.body._id);
-
-          expect(response.body._id).toEqual(hoststarToTest._id.toString()); //MonogoDB needs items to be in strings
-          
-
+          expect(response.body._id).toEqual(hoststarToTest._id.toString()); //MonogoDB needs items to be in strings          
           expect(response.body.name).toEqual(hoststarToPut.name);
           expect(response.body.numberOfPlanets).toEqual(hoststarToPut.numberOfPlanets);
         });
     });
+
+    //TODO: ADD A PUT TEST FOR 400
+
+
+    //TODO: ADD A PUT TEST FOR 404
+
+
+    //TODO: ADD A PUT TEST FOR 409(IF ANY KEYS ARE UNIQUE)
+
+
   });
 
   describe('DELETE /api/hoststars/:id', () => {
@@ -148,7 +160,7 @@ describe('api/hoststars', () => {
         });
     });
     test('should respond with a 404 status code if the id is incorrect', () => {
-      
+
       return superagent.delete(`${apiURL}/fake`)
         .then(Promise.reject)
         .catch(response => {
