@@ -9,6 +9,10 @@ const hoststarSchema = mongoose.Schema({
     required: true,
     unique: true,
   },
+  numberOfPlanets: {
+    type: Number,
+    default: faker.random.number({ min: 0, max: 10 }),
+  },
   hdName: {
     type: String,
     minlength: 3,
@@ -24,10 +28,6 @@ const hoststarSchema = mongoose.Schema({
   luminosity: {
     type: Number,
     default: faker.random.number({ min: -10, max: 10 }),
-  },
-  numberOfPlanets: {
-    type: Number,
-    default: faker.random.number({ min: 0, max: 10 }),
   },
 });
 
