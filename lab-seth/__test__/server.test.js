@@ -18,7 +18,6 @@ const hoststarMockupCreator = () => {
     mass: faker.random.number({ min: 0, max: 1000000000 }),
     radius: faker.random.number({ min: 0, max: 1000 }),
     luminosity: faker.random.number({ min: -10, max: 10 }),
-    },
   }).save();
 };
 
@@ -29,7 +28,14 @@ describe('api/hoststars', () => {
 
   describe('POST /api/hoststars', () => {
     test('should respond with a hoststar and a 200 status code if there is no error', () => {
-      let hoststarToPost = hoststarMockupCreator();
+      let hoststarToPost = {
+        name: `K-123456`,
+        numberOfPlanets: 5, //took out faker here as it was causing some tests to pass and some to fail depending on how long it took to generate a random number
+        hdName: `HD-${faker.random.number({ min: 0, max: 10000 })}`,
+        mass: faker.random.number({ min: 0, max: 1000000000 }),
+        radius: faker.random.number({ min: 0, max: 1000 }),
+        luminosity: faker.random.number({ min: -10, max: 10 }),
+      };
       return superagent.post(`${apiURL}`)
         .send(hoststarToPost)
         .then(response => {
@@ -37,11 +43,13 @@ describe('api/hoststars', () => {
           expect(response.body._id).toBeTruthy();
 
           expect(response.body.name).toEqual(hoststarToPost.name);
+          console.log(response.body.numberOfPlanets);
+          expect(response.body.numberOfPlanets).toEqual(hoststarToPost.numberOfPlanets);
         });
     });
     test('POST should respond with a 400 code if we send an incomplete hoststar', () => {
       let hoststarToPost = {
-        name: 'words',
+        name: '1234',
       };
       return superagent.post(`${apiURL}`)
         .send(hoststarToPost)
@@ -94,7 +102,6 @@ describe('api/hoststars', () => {
           return superagent.delete(`${apiURL}/${hoststar._id}`);
         })
         .then(response => {
-          console.log(response.body);
           expect(response.status).toEqual(204);
         });
     });
@@ -103,7 +110,6 @@ describe('api/hoststars', () => {
       return superagent.delete(`${apiURL}/fake`)
         .then(Promise.reject)
         .catch(response => {
-          console.log(response.status);
           expect(response.status).toEqual(404);
         });
     });

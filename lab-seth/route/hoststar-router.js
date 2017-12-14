@@ -10,7 +10,7 @@ const httpErrors = require('http-errors');
 const hoststarRouter = module.exports = new Router();
 
 hoststarRouter.post('/api/hoststars', jsonParser, (request,response, next) => {  
-  if (!request.body.name) {
+  if (!request.body.name || !request.body.numberOfPlanets) {
     return next(httpErrors(400, 'Body and Name are required'));
   }
 
