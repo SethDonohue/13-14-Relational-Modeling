@@ -13,7 +13,7 @@ module.exports = (error, request, response, next) => {
     return response.sendStatus(error.status);
   }
 
-  //--------------------------MONGO ERRORS-------------------------------
+  //--------------------------  MONGO ERRORS -------------------------------
   let message = error.message.toLowerCase();
   // Seth Donohue -  This if needs to execute before 'validation failed', or we'll get the wrong error
   if (message.includes('objectid failed')) {

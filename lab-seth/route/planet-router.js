@@ -16,11 +16,12 @@ planetRouter.post('/api/planets', jsonParser, (request,response, next) => {
 
   return new Planet(request.body).save()
     .then(planet => response.json(planet)) //this sends a 200
-    .catch(next);
+    .catch(error => next(error));
 });
 
 planetRouter.get('/api/planets/:id', (request,response,next) => {
   return Planet.findById(request.params.id)
+    .populate('hoststar')
     .then(planet => {
       if(!planet){
         throw httpErrors(404, 'Planet not found');

@@ -13,9 +13,10 @@ mongoose.Promise = Promise;
 app.use(require('./logger-middleware'));
 
 app.use(require('../route/hoststar-router'));
+app.use(require('../route/planet-router'));
 
 app.all('*', (request, response) => {
-  logger.log('info', 'Returning a 404 from the catch all route');
+  logger.log('info', 'Returning a 404 from the catch-all route');
   return response.sendStatus(404);
 });
 

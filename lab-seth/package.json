@@ -20,14 +20,11 @@
     "superagent": "^3.8.2"
   },
   "dependencies": {
-    "body": "^5.1.0",
     "body-parser": "^1.18.2",
     "dotenv": "^4.0.0",
     "express": "^4.16.2",
     "http-errors": "^1.6.2",
-    "mongodb": "^3.0.0-rc0",
     "mongoose": "^4.13.6",
-    "parser": "^0.1.4",
     "winston": "^2.4.0"
   }
 }

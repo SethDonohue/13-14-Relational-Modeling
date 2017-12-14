@@ -21,10 +21,11 @@ const planetSchema = mongoose.Schema({
     required: true,
     ref: 'hoststar',
   },
-},{
-  usePushEach: true,
+// },{
+  // usePushEach: true,
 });
 
+//------------------------ RELATIONSHIP MANAGEMENT ------------------------
 planetSchema.pre('save', function(done){
   return Hoststar.findById(this.hoststar)
     .then(hoststarFound => {
@@ -37,7 +38,7 @@ planetSchema.pre('save', function(done){
     .catch(done);
 });
 
-planetSchema.post('save', (document, done) => {
+planetSchema.post('remove', (document, done) => {
   return Hoststar.findById(document.hoststar)
     .then(hoststarFound => {
       if (!hoststarFound)

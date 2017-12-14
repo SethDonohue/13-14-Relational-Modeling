@@ -4,7 +4,6 @@ const {Router} = require('express');
 const jsonParser = require('body-parser').json();
 
 const Hoststar = require('../model/hoststar');
-const logger = require('../lib/logger');
 const httpErrors = require('http-errors');
 
 const hoststarRouter = module.exports = new Router();
@@ -20,13 +19,11 @@ hoststarRouter.post('/api/hoststars', jsonParser, (request,response, next) => {
 });
 
 hoststarRouter.get('/api/hoststars/:id', (request,response,next) => {
-  console.log(request.params.id);
   return Hoststar.findById(request.params.id)
     .then(hoststar => {
       if(!hoststar){
         throw httpErrors(404, 'Hoststar not found');
       }
-      logger.log('info', 'GET - Returning a 200 status code');
       return response.json(hoststar);
     }).catch(next);
 });
@@ -37,13 +34,13 @@ hoststarRouter.delete('/api/hoststars/:id', (request, response, next) => {
       if (!hoststar) {
         throw httpErrors(404, 'hoststar not found');
       }
-      logger.log('info', 'GET - Returning a 204 status code');
       return response.sendStatus(204);
     }).catch(next);
 });
 
 hoststarRouter.put('/api/hoststars/:id', jsonParser, (request, response, next) => {
   let options = { runValidators: true, new: true };
+  
   if (!request.body.name || !request.body.numberOfPlanets) {
     return next(httpErrors(400, 'Body and Name are required'));
   }
@@ -53,7 +50,6 @@ hoststarRouter.put('/api/hoststars/:id', jsonParser, (request, response, next) =
       if (!hoststar) {
         throw httpErrors(404, 'hoststar not found');
       }
-      logger.log('info', 'GET - Returning a 200 status code');
       return response.json(hoststar);
     }).catch(next);
 });

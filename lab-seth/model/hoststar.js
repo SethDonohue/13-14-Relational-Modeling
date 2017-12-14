@@ -34,8 +34,7 @@ const hoststarSchema = mongoose.Schema({
   planetNames: [{
     type: mongoose.Schema.Types.ObjectId, //needs to be an array to that planet id's can be pushed into here from planets.js model
     required: true,
-    unique: true,
-  }],
+    ref: 'planet'}],
 },{
   usePushEach: true,
 });
