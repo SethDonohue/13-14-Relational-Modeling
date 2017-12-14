@@ -96,7 +96,7 @@ describe('api/hoststars', () => {
         });
     });
     test('should respond with a 404 status code if the id is incorrect', () => {
-      return superagent.get(`${apiURL}/fake`)
+      return superagent.get(`${apiURL}/falseId`)
         .then(Promise.reject)
         .catch(response => {
           expect(response.status).toEqual(404);
@@ -153,7 +153,29 @@ describe('api/hoststars', () => {
         });
     });
 
-    //TODO: ADD A PUT TEST FOR 404
+    test('should respond with a 404 code if we send an bad id', () => {
+      let hoststarToTest = null;
+      let hoststarToPut = {
+        name: `K-123000`,
+        numberOfPlanets: 3, //took out faker here as it was causing some tests to pass and some to fail depending on how long it took to generate a random number
+        hdName: `HD-${faker.random.number({ min: 0, max: 10000 })}`,
+        mass: faker.random.number({ min: 0, max: 1000000000 }),
+        radius: faker.random.number({ min: 0, max: 1000 }),
+        luminosity: faker.random.number({ min: -10, max: 10 }),
+      };
+
+      return hoststarMockupCreator()
+        .then(hoststar => {
+          hoststarToTest = hoststar;
+          return superagent.put(`${apiURL}/falseId`)
+            .send(hoststarToPut);
+        })
+        .then(Promise.reject)
+        .catch(response => {
+          expect(response.status).toEqual(404);
+        });
+    });
+
 
 
     //TODO: ADD A PUT TEST FOR 409(IF ANY KEYS ARE UNIQUE)
