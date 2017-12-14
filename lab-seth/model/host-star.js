@@ -1,25 +1,34 @@
 'use strict';
 
 const faker = require('faker');
-// vinicio - mongoose is the ORM to connect to mongo
 const mongoose = require('mongoose');
 
-const planetSchema = mongoose.Schema({
+const hoststarSchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
     unique: true,
   },
-  content: {
+  hdName: {
     type: String,
-    required: true,
-    minlength: 1,
+    minlength: 3,
   },
-  discoverDate: {
-    type: Date,
-    default: faker.date.past(),//() => new Date(),
+  mass: {
+    type: Number,
+    default: faker.random.number({ min: 0, max: 1000000000 }),
+  },
+  radius: {
+    type: Number,
+    default: faker.random.number({ min: 0, max: 1000 }),
+  },
+  luminosity: {
+    type: Number,
+    default: faker.random.number({ min: -10, max: 10 }),
+  },
+  numberOfPlanets: {
+    type: Number,
+    default: faker.random.number({ min: 0, max: 10 }),
   },
 });
 
-// vinicio - internally, this becomes 'planets'
-module.exports = mongoose.model('planet', planetSchema);
+module.exports = mongoose.model('hoststar', hoststarSchema);

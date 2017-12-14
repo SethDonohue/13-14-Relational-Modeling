@@ -5,46 +5,46 @@ process.env.MONGODB_URI = 'mongodb://localhost/testing';
 
 const faker = require('faker');
 const superagent = require('superagent');
-const Planet = require('../model/planet');
+const Hoststar = require('../model/hoststar');
 const server = require('../lib/server');
 
-const apiURL = `http://localhost:${process.env.PORT}/api/planets`;
+const apiURL = `http://localhost:${process.env.PORT}/api/hoststars`;
 
-const planetMockupCreator = () => {
-  return new Planet({
+const hoststarMockupCreator = () => {
+  return new Hoststar({
     name: `K-123456`,
     content  : 'words',
   }).save();
 };
 
-describe('api/planets', () => {
+describe('api/hoststars', () => {
   beforeAll(server.start);
   afterAll(server.stop);
-  afterEach(() => Planet.remove({}));
+  afterEach(() => Hoststar.remove({}));
 
-  describe('POST /api/planets', () => {
-    test('should respond with a planet and a 200 status code if there is no error', () => {
-      let planetToPost = {
+  describe('POST /api/hoststars', () => {
+    test('should respond with a hoststar and a 200 status code if there is no error', () => {
+      let hoststarToPost = {
         name: `K-123456`,
         content: 'words',
       };
       return superagent.post(`${apiURL}`)
-        .send(planetToPost)
+        .send(hoststarToPost)
         .then(response => {
           // console.log(response.body);
           expect(response.status).toEqual(200);
           expect(response.body._id).toBeTruthy();
 
-          expect(response.body.name).toEqual(planetToPost.name);
-          expect(response.body.content).toEqual(planetToPost.content);
+          expect(response.body.name).toEqual(hoststarToPost.name);
+          expect(response.body.content).toEqual(hoststarToPost.content);
         });
     });
-    test('should respond with a 400 code if we send an incomplete planet', () => {
-      let planetToPost = {
+    test('should respond with a 400 code if we send an incomplete hoststar', () => {
+      let hoststarToPost = {
         content: 'words',
       };
       return superagent.post(`${apiURL}`)
-        .send(planetToPost)
+        .send(hoststarToPost)
         .then(Promise.reject)
         .catch(response => {
           console.log(response.status);
@@ -53,22 +53,22 @@ describe('api/planets', () => {
     });
   });
 
-  describe('GET /api/planets', () => {
+  describe('GET /api/hoststars', () => {
     test('should respond with a 200 status code if there is no error', () => {
-      let planetToTest = null;
+      let hoststarToTest = null;
 
-      return planetMockupCreator()
-        .then(planet => {
-          planetToTest = planet;
-          return superagent.get(`${apiURL}/${planet._id}`);
+      return hoststarMockupCreator()
+        .then(hoststar => {
+          hoststarToTest = hoststar;
+          return superagent.get(`${apiURL}/${hoststar._id}`);
         })
         .then(response => {
           expect(response.status).toEqual(200);
 
-          expect(response.body._id).toEqual(planetToTest._id.toString());
+          expect(response.body._id).toEqual(hoststarToTest._id.toString());
 
-          expect(response.body.name).toEqual(planetToTest.name);
-          expect(response.body.content).toEqual(planetToTest.content);          
+          expect(response.body.name).toEqual(hoststarToTest.name);
+          expect(response.body.content).toEqual(hoststarToTest.content);          
         });
     });
     test('should respond with a 404 status code if the id is incorrect', () => {
@@ -80,11 +80,11 @@ describe('api/planets', () => {
     });
   });
 
-  describe('DELETE /api/planets/:id', () => {
+  describe('DELETE /api/hoststars/:id', () => {
     test('should respond with a 204 status code if there is no error', () => {
-      return planetMockupCreator()
-        .then(planet => {
-          return superagent.delete(`${apiURL}/${planet._id}`);
+      return hoststarMockupCreator()
+        .then(hoststar => {
+          return superagent.delete(`${apiURL}/${hoststar._id}`);
         })
         .then(response => {
           console.log(response.body);
