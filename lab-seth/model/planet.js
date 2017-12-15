@@ -3,7 +3,7 @@
 const faker = require('faker');
 const mongoose = require('mongoose');
 const Hoststar = require('./hoststar');
-const httpErrors = require('httpErrors');
+const httpErrors = require('http-errors');
 
 const planetSchema = mongoose.Schema({
   name: {
@@ -31,7 +31,7 @@ planetSchema.pre('save', function(done){
     .then(hoststarFound => {
       if(!hoststarFound)
         throw httpErrors(404, 'hoststar not found');
-      hoststarFound.planets.push(this._id);
+      hoststarFound.planetNames.push(this._id);
       return hoststarFound.save();
     })
     .then(() => done()) //need to make a function to make sure we dont pass anything into the done() as the done() is expected (error, args)
@@ -43,7 +43,7 @@ planetSchema.post('remove', (document, done) => {
     .then(hoststarFound => {
       if (!hoststarFound)
         throw httpErrors(404, 'hoststar not found');
-      hoststarFound.planets = hoststarFound.planets.filter(planet => {
+      hoststarFound.planetNames = hoststarFound.planetNames.filter(planet => {
         return planet._id.toString() !== document._id.toString();
       });
       return hoststarFound.save();
