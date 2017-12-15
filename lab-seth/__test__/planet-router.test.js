@@ -17,7 +17,7 @@ describe('/api/planets', () => {
   afterEach(planetMock.remove);
 
   describe('POST /api/planets', () => {
-    test('should respond with a planet and 200 stats if there is no error', () => {
+    test('should respond with a planet and 200 status if no error', () => {
       let tempHoststarMock = null;
       return hoststarMock.create()
         .then(mock => {
@@ -42,7 +42,7 @@ describe('/api/planets', () => {
         });
     });
 
-    test('should respond with a 404 if the hoststar id is not present', () => {
+    test('should respond with a 404 if the hoststar id is not input', () => {
       return superagent.post(apiURL)
         .send({
           name: `KP-${faker.random.number(10)}-${
@@ -76,7 +76,6 @@ describe('/api/planets', () => {
 
       return planetMock.create()
         .then(mock => {
-          //vinicio - no error checking for now
           tempMock = mock;
           return superagent.get(`${apiURL}/${mock.planet._id}`);
         })
@@ -91,6 +90,7 @@ describe('/api/planets', () => {
           expect(response.body.hoststar.name).toEqual(tempMock.hoststar.name);
         });
     });
+
     test('should respond with 404 status code if the id is incorrect', () => {
       return superagent.get(`${apiURL}/FALSE_ID`)
         .then(Promise.reject)
@@ -117,6 +117,23 @@ describe('/api/planets', () => {
           expect(response.body.content).toEqual(planetToUpdate.content);
         });
     });
+    
+    test('should update planet and respond with 200 if the id is incorrect', () => {
+
+      let planetToUpdate = null;
+
+      return planetMock.create()
+        .then(mock => {
+          planetToUpdate = mock.planet;
+          return superagent.put(`${apiURL}/${mock.planet._id}`)
+            .send({ name: 'KP-123asd' });
+        })
+        .then(response => {
+          expect(response.status).toEqual(404);
+          expect(response.body.name).toEqual('KP-123asd');
+          expect(response.body.content).toEqual(planetToUpdate.content);
+        });
+    });
   });
 
   describe('DELETE /api/planets/:id', () => {
@@ -137,8 +154,5 @@ describe('/api/planets', () => {
           expect(response.status).toEqual(404);
         });
     });
-
   });
-
-
 });
