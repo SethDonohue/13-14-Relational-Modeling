@@ -15,7 +15,7 @@ planetRouter.post('/api/planets', jsonParser, (request,response, next) => {
   }
 
   return new Planet(request.body).save()
-    .then(planet => response.json(planet)) //this sends a 200
+    .then(planet => response.json(planet))
     .catch(error => next(error));
 });
 
@@ -37,7 +37,7 @@ planetRouter.delete('/api/planets/:id', (request, response, next) => {
       if (!planet) {
         throw httpErrors(404, 'planet not found');
       }
-      logger.log('info', 'GET - Returning a 204 status code');
+      logger.log('info', 'DELETE - Returning a 204 status code');
       return response.sendStatus(204);
     }).catch(next);
 });
@@ -50,7 +50,7 @@ planetRouter.put('/api/planets/:id', jsonParser, (request, response, next) => {
       if (!planet) {
         throw httpErrors(404, 'planet not found');
       }
-      logger.log('info', 'GET - Returning a 200 status code');
+      logger.log('info', 'PUT - Returning a 200 status code');
       return response.json(planet);
     }).catch(next);
 });

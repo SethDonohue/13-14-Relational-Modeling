@@ -17,7 +17,7 @@ describe('/api/planets', () => {
   afterEach(planetMock.remove);
 
   describe('POST /api/planets', () => {
-    test('should respond with a planet and 200 status if no error', () => {
+    test('This POST should respond with a planet and 200 status if no error', () => {
       let tempHoststarMock = null;
       return hoststarMock.create()
         .then(mock => {
@@ -42,7 +42,7 @@ describe('/api/planets', () => {
         });
     });
 
-    test('should respond with a 404 if the hoststar id is not input', () => {
+    test('This POST should respond with a 404 if the hoststar id is not input', () => {
       return superagent.post(apiURL)
         .send({
           name: `KP-${faker.random.number(10)}-${
@@ -56,7 +56,7 @@ describe('/api/planets', () => {
         });
     });
 
-    test('should respond with a 400 code if we send an incomplete planet', () => {
+    test('This POST should respond with a 400 code if we send an incomplete planet', () => {
       let planetToPost = {
         content: 'CONTENT_FILLER',
       };
@@ -71,7 +71,7 @@ describe('/api/planets', () => {
   });
 
   describe('GET /api/planets/:id', () => {
-    test('should respond with 200 status code if there is no error', () => {
+    test('This GET should respond with 200 status code if there is no error', () => {
       let tempMock = null;
 
       return planetMock.create()
@@ -91,7 +91,7 @@ describe('/api/planets', () => {
         });
     });
 
-    test('should respond with 404 status code if the id is incorrect', () => {
+    test('This GET should respond with 404 status code if the id is incorrect', () => {
       return superagent.get(`${apiURL}/FALSE_ID`)
         .then(Promise.reject)
         .catch(response => {
@@ -101,7 +101,7 @@ describe('/api/planets', () => {
   });
 
   describe('PUT /api/planets', () => {
-    test('should update planet and respond with 200 if there are no errors', () => {
+    test('This PUT should update planet and respond with 200 if there are no errors', () => {
 
       let planetToUpdate = null;
 
@@ -118,12 +118,10 @@ describe('/api/planets', () => {
         });
     });
     
-    test('should respond with 404 if the id is incorrect', () => {
-      let planetToUpdate = null;
+    test('This PUT should respond with 404 if the id is incorrect', () => {
 
       return planetMock.create()
-        .then(mock => {
-          planetToUpdate = mock.planet;
+        .then(() => {
           return superagent.put(`${apiURL}/FALSE_ID`)
             .send({ name: 'KP-123asd' });
         })
@@ -135,7 +133,7 @@ describe('/api/planets', () => {
   });
 
   describe('DELETE /api/planets/:id', () => {
-    test('should respond with a 204 if there are no errors', () => {
+    test('This DELETE should respond with a 204 if there are no errors', () => {
       return planetMock.create()
         .then(mock => {
           return superagent.delete(`${apiURL}/${mock.planet._id}`);
@@ -145,7 +143,7 @@ describe('/api/planets', () => {
         });
     });
 
-    test('should respond with a 404 if the id is invalid', () => {
+    test('This DELETE should respond with a 404 if the id is invalid', () => {
       return superagent.delete(`${apiURL}/FALSE_ID`)
         .then(Promise.reject)
         .catch(response => {

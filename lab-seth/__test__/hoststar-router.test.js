@@ -13,8 +13,8 @@ describe('/api/hoststars', () => {
   afterAll(server.stop);
   afterEach(hoststarMock.remove);
 
-  describe('POST /hoststars', () => {
-    test('should return a 200 and a hoststar if there are no errors', () => {
+  describe('POST /api/hoststars', () => {
+    test('This POST should return a 200 and a hoststar if there are no errors', () => {
       return superagent.post(apiURL)
         .send({
           name: 'K-1234',
@@ -26,7 +26,7 @@ describe('/api/hoststars', () => {
         });
     });
 
-    test('should return a 409 due to a duplicate name', () => {
+    test('This POST should return a 409 due to a duplicate name', () => {
       return hoststarMock.create()
         .then(hoststar => {
           return superagent.post(apiURL)
@@ -40,11 +40,15 @@ describe('/api/hoststars', () => {
           expect(response.status).toEqual(409);
         });
     });
+
+  //TODO: ADD 400 TEST
+  //TODO: ADD 404 TEST
+
   });
 
-  describe('GET /hoststars/:id', () => {
-    test('Should respond with a 200 status and a hoststar if there are no error', () => {
-      let tempHoststarMock;
+  describe('GET /api/hoststars/:id', () => {
+    test('This GET should respond with a 200 status and a hoststar if there are no errors', () => {
+      let tempHoststarMock = null;
 
       return hoststarMock.create()
         .then(hoststar => {
@@ -57,5 +61,55 @@ describe('/api/hoststars', () => {
             .toEqual(JSON.stringify(tempHoststarMock.numberOfPlanets));
         });
     });
+
+    //TODO: ADD 400 TEST
+    //TODO: ADD 404 TEST
+    //TODO: ADD 409 TEST
+
   });
+
+
+  //TODO: ADD ENTIRE PUT TEST
+
+  describe('PUT /api/hoststars/', () => {
+      //TODO: ADD 200 TEST
+
+    test('This PUT should respond with a 200 status if there are no errors', () => {
+
+      let tempHoststarMock = null;
+
+      return hoststarMock.create()
+        .then(hoststar => {
+          console.log(hoststar);
+          tempHoststarMock = hoststar;
+          console.log(hoststar._id);
+          return superagent.put(`${apiURL}/${hoststar._id}`)
+            .send({ numberOfPlanets: 6 });
+        })
+        .then(response => {
+          expect(response.status).toEqual(200);
+          expect(response.body.name).toEqual('K-5678');
+          expect(response.body.numberOfPlanets).toEqual(tempHoststarMock.numberOfPlanets);
+        });
+      });
+      //TODO: ADD 400 TEST
+      // test('This PUT should')
+      
+    
+
+  //TODO: ADD 404 TEST
+  //TODO: ADD 409 TEST
+  });
+
+
+
+
+  //TODO: ADD ENTIRE DELETE TEST
+  //TODO: ADD 200 TEST
+  //TODO: ADD 400 TEST
+  //TODO: ADD 404 TEST
+  //TODO: ADD 409 TEST
+
+
+
 });

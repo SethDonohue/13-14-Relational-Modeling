@@ -11,7 +11,6 @@ let httpServer = null;
 mongoose.Promise = Promise;
 
 app.use(require('./logger-middleware'));
-
 app.use(require('../route/hoststar-router'));
 app.use(require('../route/planet-router'));
 

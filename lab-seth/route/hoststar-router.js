@@ -14,7 +14,7 @@ hoststarRouter.post('/api/hoststars', jsonParser, (request,response, next) => {
   }
 
   return new Hoststar(request.body).save()
-    .then(hoststar => response.json(hoststar)) //this sends a 200
+    .then(hoststar => response.json(hoststar))
     .catch(next);
 });
 
@@ -32,7 +32,7 @@ hoststarRouter.delete('/api/hoststars/:id', (request, response, next) => {
   return Hoststar.findByIdAndRemove(request.params.id)
     .then(hoststar => {
       if (!hoststar) {
-        throw httpErrors(404, 'hoststar not found');
+        throw httpErrors(404, 'Hoststar not found');
       }
       return response.sendStatus(204);
     }).catch(next);
@@ -48,7 +48,7 @@ hoststarRouter.put('/api/hoststars/:id', jsonParser, (request, response, next) =
   return Hoststar.findByIdAndUpdate(request.params.id, request.body, options)
     .then(hoststar => {
       if (!hoststar) {
-        throw httpErrors(404, 'hoststar not found');
+        throw httpErrors(404, 'Hoststar not found');
       }
       return response.json(hoststar);
     }).catch(next);

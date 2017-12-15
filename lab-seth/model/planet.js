@@ -1,6 +1,5 @@
 'use strict';
 
-const faker = require('faker');
 const mongoose = require('mongoose');
 const Hoststar = require('./hoststar');
 const httpErrors = require('http-errors');
@@ -21,8 +20,6 @@ const planetSchema = mongoose.Schema({
     required: true,
     ref: 'hoststar',
   },
-// },{
-  // usePushEach: true,
 });
 
 //------------------------ RELATIONSHIP MANAGEMENT ------------------------
@@ -30,11 +27,11 @@ planetSchema.pre('save', function(done){
   return Hoststar.findById(this.hoststar)
     .then(hoststarFound => {
       if(!hoststarFound)
-        throw httpErrors(404, 'hoststar not found');
+        throw httpErrors(404, 'Hoststar not found');
       hoststarFound.planetNames.push(this._id);
       return hoststarFound.save();
     })
-    .then(() => done()) //need to make a function to make sure we dont pass anything into the done() as the done() is expected (error, args)
+    .then(() => done()) //need to make a function to make sure we dont pass anything into the done() as the done() is expecting (error, args)
     .catch(done);
 });
 
@@ -42,7 +39,7 @@ planetSchema.post('remove', (document, done) => {
   return Hoststar.findById(document.hoststar)
     .then(hoststarFound => {
       if (!hoststarFound)
-        throw httpErrors(404, 'hoststar not found');
+        throw httpErrors(404, 'Hoststar not found');
       hoststarFound.planetNames = hoststarFound.planetNames.filter(planet => {
         return planet._id.toString() !== document._id.toString();
       });

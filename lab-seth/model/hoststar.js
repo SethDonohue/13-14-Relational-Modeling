@@ -2,7 +2,6 @@
 
 const faker = require('faker');
 const mongoose = require('mongoose');
-// const planetSchema = require('./planet');
 
 const hoststarSchema = mongoose.Schema({
   name: {
