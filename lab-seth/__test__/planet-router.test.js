@@ -118,20 +118,18 @@ describe('/api/planets', () => {
         });
     });
     
-    test('should update planet and respond with 200 if the id is incorrect', () => {
-
+    test('should respond with 404 if the id is incorrect', () => {
       let planetToUpdate = null;
 
       return planetMock.create()
         .then(mock => {
           planetToUpdate = mock.planet;
-          return superagent.put(`${apiURL}/${mock.planet._id}`)
+          return superagent.put(`${apiURL}/FALSE_ID`)
             .send({ name: 'KP-123asd' });
         })
-        .then(response => {
+        .then(Promise.reject)
+        .catch(response => {
           expect(response.status).toEqual(404);
-          expect(response.body.name).toEqual('KP-123asd');
-          expect(response.body.content).toEqual(planetToUpdate.content);
         });
     });
   });
