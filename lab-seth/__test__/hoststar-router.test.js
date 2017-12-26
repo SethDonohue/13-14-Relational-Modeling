@@ -72,28 +72,21 @@ describe('/api/hoststars', () => {
   //TODO: ADD ENTIRE PUT TEST
 
   describe('PUT /api/hoststars/', () => {
-      //TODO: ADD 200 TEST
-
     test('This PUT should respond with a 200 status if there are no errors', () => {
-
-      let tempHoststarMock = null;
 
       return hoststarMock.create()
         .then(hoststar => {
-          console.log(hoststar);
-          tempHoststarMock = hoststar;
           console.log(hoststar._id);
           return superagent.put(`${apiURL}/${hoststar._id}`)
             .send({ numberOfPlanets: 6 });
         })
         .then(response => {
           expect(response.status).toEqual(200);
-          expect(response.body.name).toEqual('K-5678');
-          expect(response.body.numberOfPlanets).toEqual(tempHoststarMock.numberOfPlanets);
+          expect(response.body.numberOfPlanets).toEqual(6);
         });
-      });
-      //TODO: ADD 400 TEST
-      // test('This PUT should')
+    });
+    //TODO: ADD 400 TEST
+    // test('This PUT should')
       
     
 

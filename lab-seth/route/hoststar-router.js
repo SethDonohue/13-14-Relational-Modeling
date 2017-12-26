@@ -41,10 +41,6 @@ hoststarRouter.delete('/api/hoststars/:id', (request, response, next) => {
 hoststarRouter.put('/api/hoststars/:id', jsonParser, (request, response, next) => {
   let options = { runValidators: true, new: true };
   
-  if (!request.body.name || !request.body.numberOfPlanets) {
-    return next(httpErrors(400, 'Body and Name are required'));
-  }
-
   return Hoststar.findByIdAndUpdate(request.params.id, request.body, options)
     .then(hoststar => {
       if (!hoststar) {
